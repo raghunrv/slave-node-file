@@ -1,0 +1,23 @@
+---
+- hosts: slave1
+  become: true
+  tasks:
+  - name: docker | Remove old docker repo # noqa 301 302
+    raw: |
+      rm -f /etc/apt/sources.list.d/download_docker_com_linux_ubuntu.list*
+  - name: Update apt 
+    apt: update_cache=yes
+  - name: docker | Install docker repo # noqa 301
+    raw: |
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - name: Add Docker Repository
+    raw: |
+      add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable edge" -y
+  - name: install the latest version of Docker
+    apt: name=docker.io state=latest
+  - name: install the latest version of Python-pip
+    apt: name=python-pip state=latest
+
+
+
+
